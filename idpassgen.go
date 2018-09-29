@@ -36,7 +36,6 @@ func NewPassword(length int, rnd *rand.Rand) string {
 	}
 
 	pass := make([]byte, length)
-	// log.Printf("len(pass) == %d, cap(pass) == %d", len(pass), cap(pass))
 
 	// make sure the password contains a digit, uppercase letter, lowercase letter and special character
 	pass[0] = chars[rnd.Int63()%23]    // special character in chars[:23]
@@ -61,10 +60,6 @@ func NewHex(length int, rnd *rand.Rand) string {
 	if length < 1 {
 		length = 1
 	}
-
-	// if length > 256 {
-	// 	length = 256
-	// }
 
 	id := make([]byte, length)
 	for i := range id {
