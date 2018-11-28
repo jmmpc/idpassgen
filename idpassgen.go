@@ -69,16 +69,15 @@ func NewHex(length int, rnd *rand.Rand) string {
 	return string(id)
 }
 
-func String(length int, charset string, rnd *rand.Rand) string {
+func String(length int, charset []rune, rnd *rand.Rand) string {
 	if length < 1 {
 		length = 1
 	}
 
-	runeset := []rune(charset)
-	runesetlen := int64(len(runeset))
+	runesetlen := int64(len(charset))
 	runes := make([]rune, length)
 	for i := range runes {
-		runes[i] = runeset[rnd.Int63()%runesetlen]
+		runes[i] = charset[rnd.Int63()%runesetlen]
 	}
 
 	return string(runes)

@@ -9,6 +9,7 @@ import (
 
 var n = 32
 var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+var runeset = []rune(chars)
 
 func BenchmarkNewID(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -30,7 +31,7 @@ func BenchmarkNewHex(b *testing.B) {
 
 func BenchmarkString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		String(n, chars, rnd)
+		String(n, runeset, rnd)
 	}
 }
 
@@ -109,7 +110,7 @@ func TestString(t *testing.T) {
 	}
 
 	for _, tc := range tt {
-		result := String(tc.inputLength, tc.charset, rnd)
+		result := String(tc.inputLength, []rune(tc.charset), rnd)
 		fmt.Printf("Generated string: %s\n", result)
 		if l := len([]rune(result)); l != tc.outputLength {
 			t.Errorf("expected result lendth %d; got %d", tc.outputLength, l)
