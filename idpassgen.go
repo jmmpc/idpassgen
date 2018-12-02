@@ -2,6 +2,8 @@ package idpassgen
 
 import (
 	"math/rand"
+	"sync"
+	"time"
 )
 
 // chars[:23]   - special characters
@@ -69,6 +71,20 @@ func NewHex(length int, rnd *rand.Rand) string {
 	return string(id)
 }
 
+type lockedRand struct {
+	mu  sync.Mutex
+	rnd *rand.Rand
+}
+
+func (r *lockedRand) Int63() (n int64) {
+	r.mu.Lock()
+	n = r.rnd.Int63()
+	r.mu.Unlock()
+	return
+}
+
+var defaultRand = lockedRand{rnd: rand.New(rand.NewSource(time.Now().UnixNano()))}
+
 func String(length int, charset []rune, rnd *rand.Rand) string {
 	if length < 1 {
 		length = 1
@@ -78,6 +94,20 @@ func String(length int, charset []rune, rnd *rand.Rand) string {
 	runes := make([]rune, length)
 	for i := range runes {
 		runes[i] = charset[rnd.Int63()%runesetlen]
+	}
+
+	return string(runes)
+}
+
+func RandString(length int, charset []rune) string {
+	if length < 1 {
+		length = 1
+	}
+
+	runesetlen := int64(len(charset))
+	runes := make([]rune, length)
+	for i := range runes {
+		runes[i] = charset[defaultRand.Int63()%runesetlen]
 	}
 
 	return string(runes)
