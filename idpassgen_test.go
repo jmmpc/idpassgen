@@ -29,9 +29,9 @@ func BenchmarkNewHex(b *testing.B) {
 	}
 }
 
-func BenchmarkString(b *testing.B) {
+func BenchmarkNewString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		String(n, runeset, rnd)
+		NewString(n, runeset, rnd)
 	}
 }
 
@@ -95,22 +95,22 @@ func TestNewHex(t *testing.T) {
 	}
 }
 
-func TestString(t *testing.T) {
+func TestNewString(t *testing.T) {
 	tt := []struct {
 		inputLength  int
 		outputLength int
-		charset      string
+		charset      []rune
 	}{
-		{0, 1, chars[33:59]},
-		{-13, 1, chars},
-		{32, 32, chars},
-		{3, 3, chars},
-		{1, 1, chars},
-		{12, 12, "0123456789абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"},
+		{0, 1, []rune(chars[33:59])},
+		{-13, 1, runeset},
+		{32, 32, runeset},
+		{3, 3, runeset},
+		{1, 1, runeset},
+		{12, 12, []rune("0123456789абвгґдеєжзиіїйклмнопрстуфхцчшщьюя")},
 	}
 
 	for _, tc := range tt {
-		result := String(tc.inputLength, []rune(tc.charset), rnd)
+		result := NewString(tc.inputLength, tc.charset, rnd)
 		fmt.Printf("Generated string: %s\n", result)
 		if l := len([]rune(result)); l != tc.outputLength {
 			t.Errorf("expected result lendth %d; got %d", tc.outputLength, l)
